@@ -4,6 +4,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from sql_connection import *
+from add_customer import *
 
 class ShopWindow(QMainWindow):
     def __init__(self):
@@ -58,11 +59,23 @@ class ShopWindow(QMainWindow):
 
         #connections
         self.open_database.triggered.connect(self.open_database_file)
+        self.add_customer.triggered.connect(self.add_customer_view)
 
     def open_database_file(self):
         path = QFileDialog.getOpenFileName(caption="Open Database",filter="Database file (*.db *.dat)")
         self.connection = SQLConnection(path)
         self.connection.open_database()
+
+    def add_customer_view(self):
+        self.add_customer_widget = AddCustomerWidget()
+        self.setCentralWidget(self.add_customer_widget)
+        #connect the custom signal in the widget to our method
+        self.add_customer_widget.customerAddedSignal.connect(self.process_save_customer)
+
+    def process_save_customer(self):
+        details = self.add_customer_widget.customer_details()
+        print(details)
+
 
 if __name__ == "__main__":
     application  = QApplication(sys.argv)
