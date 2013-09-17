@@ -3,6 +3,8 @@ import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
+from sql_connection import *
+
 class ShopWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -53,6 +55,14 @@ class ShopWindow(QMainWindow):
         self.addToolBar(self.customer_toolbar)
         self.addToolBar(self.order_toolbar)
         self.addToolBar(self.product_toolbar)
+
+        #connections
+        self.open_database.triggered.connect(self.open_database_file)
+
+    def open_database_file(self):
+        path = QFileDialog.getOpenFileName(caption="Open Database",filter="Database file (*.db *.dat)")
+        self.connection = SQLConnection(path)
+        self.connection.open_database()
 
 if __name__ == "__main__":
     application  = QApplication(sys.argv)
