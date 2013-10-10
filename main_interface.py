@@ -74,8 +74,8 @@ class ShopWindow(QMainWindow):
 
     def process_save_customer(self):
         details = self.add_customer_widget.customer_details()
-        print(details)
-
+        self.connection.add_new_customer(details)
+        self.add_customer_widget.clear_details()
 
 if __name__ == "__main__":
     application  = QApplication(sys.argv)

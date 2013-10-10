@@ -26,3 +26,16 @@ class SQLConnection:
         """closes the database if a close event occurs -
         such as close window/quit application"""
         self.close_database()
+
+    #customer queries
+    def add_new_customer(self,details):
+        query = QSqlQuery()
+        query.prepare("""INSERT INTO customer (FirstName,LastName,Street,Town,PostCode,TelephoneNumber) VALUES
+                        (?,?,?,?,?,?)""")
+        query.addBindValue(details['first_name'])
+        query.addBindValue(details['last_name'])
+        query.addBindValue(details['street'])
+        query.addBindValue(details['town'])
+        query.addBindValue(details['post_code'])
+        query.addBindValue(details['telephone'])
+        query.exec_()
