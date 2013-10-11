@@ -4,7 +4,7 @@ This code is designed to help you learn about the Git version control system and
 
 ##Git
 
-Git is a **version control** system - this means that it can help you keep track of the changes you make to your code. This is incredibly useful as you will often want to try new things and know that you can always go back to an older version your changes don't work out.
+Git is a **version control** system - this means that it can help you keep track of the changes you make to your code. This is incredibly useful as you will often want to try new things and know that you can always go back to an older version if your changes don't work out.
 
 Git is installed on all of the Computers in the Computing and ICT department and you can download and install it for free at home. Today you are going to take your first steps learning how to work with Git.
 
