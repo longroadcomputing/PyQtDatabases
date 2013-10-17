@@ -5,6 +5,7 @@ from PyQt4.QtCore import *
 
 from sql_connection import *
 from add_customer import *
+from find_customer import *
 
 class ShopWindow(QMainWindow):
     def __init__(self):
@@ -60,6 +61,7 @@ class ShopWindow(QMainWindow):
         #connections
         self.open_database.triggered.connect(self.open_database_file)
         self.add_customer.triggered.connect(self.add_customer_view)
+        self.add_order.triggered.connect(self.add_order_view)
 
     def open_database_file(self):
         path = QFileDialog.getOpenFileName(caption="Open Database",filter="Database file (*.db *.dat)")
@@ -76,6 +78,10 @@ class ShopWindow(QMainWindow):
         details = self.add_customer_widget.customer_details()
         self.connection.add_new_customer(details)
         self.add_customer_widget.clear_details()
+
+    def add_order_view(self):
+        self.add_order_widget = FindCustomerWidget()
+        self.setCentralWidget(self.add_order_widget)
 
 if __name__ == "__main__":
     application  = QApplication(sys.argv)
