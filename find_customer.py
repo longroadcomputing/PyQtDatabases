@@ -7,9 +7,22 @@ class FindCustomerWidget(QWidget):
      #customer signal to fire when details added
     findCustomerSignal = pyqtSignal()
 
-    def __init__(self):
+    def __init__(self,connection):
         super().__init__()
 
+        self.connection = connection
+
+        self.stacked_layout = QStackedLayout()
+        self.find_customer_layout()
+
+        self.setLayout(self.stacked_layout)
+
+
+        #connections
+        self.radio_button_group.buttonClicked.connect(self.change_search)
+        self.find_customer_button.clicked.connect(self.find_customer)
+
+    def find_customer_layout(self):
         #create widgets
         self.customer_number_label = QLabel("Customer Number")
         self.customer_first_name_label = QLabel("First Name")
@@ -76,30 +89,39 @@ class FindCustomerWidget(QWidget):
         self.final_layout = QVBoxLayout()
         self.final_layout.addWidget(self.radio_button_box)
 
-        self.setLayout(self.final_layout)
+        self.find_customer_widget = QWidget()
+        self.find_customer_widget.setLayout(self.final_layout)
+        self.stacked_layout.addWidget(self.find_customer_widget)
 
-        #connections
-        self.radio_button_group.buttonClicked.connect(self.change_search)
-        self.find_customer_button.clicked.connect(self.find_customer)
+    def select_customer_layout(self):
+        self.customer_table = QTableView()
+        self.customer_table.setSelectionBehavior(1)
+        self.customer_table.setModel(self.model)
+
+        self.customer_table_layout = QVBoxLayout()
+        self.customer_table_layout.addWidget(self.customer_table)
+
+        self.select_customer_widget = QWidget()
+        self.select_customer_widget.setLayout(self.customer_table_layout)
+        self.stacked_layout.addWidget(self.select_customer_widget)
+
+
+
 
     def change_search(self):
-        print(self.radio_button_group.checkedId())
         if self.radio_button_group.checkedId() == 0:
-            print("zero")
             self.customer_number_edit.setEnabled(True)
             self.customer_first_name_edit.setEnabled(False)
             self.customer_last_name_edit.setEnabled(False)
             self.customer_house_number_edit.setEnabled(False)
             self.customer_postcode_edit.setEnabled(False)
         elif self.radio_button_group.checkedId() == 1:
-            print("one")
             self.customer_number_edit.setEnabled(False)
             self.customer_first_name_edit.setEnabled(True)
             self.customer_last_name_edit.setEnabled(True)
             self.customer_house_number_edit.setEnabled(False)
             self.customer_postcode_edit.setEnabled(False)
         elif self.radio_button_group.checkedId() == 2:
-            print("two")
             self.customer_number_edit.setEnabled(False)
             self.customer_first_name_edit.setEnabled(False)
             self.customer_last_name_edit.setEnabled(False)
@@ -109,10 +131,14 @@ class FindCustomerWidget(QWidget):
     def find_customer(self):
         if self.radio_button_group.checkedId() == 0:
             self.search_values = (self.customer_number_edit.text(),)
+            self.model = self.connection.find_existing_customers_by_number(self.search_values)
         elif self.radio_button_group.checkedId() == 1:
             self.search_values = (self.customer_first_name_edit.text(),self.customer_last_name_edit.text())
+            self.model = self.connection.find_existing_customers_by_name(self.search_values)
         elif self.radio_button_group.checkedId() == 2:
             self.search_values = (self.customer_house_number_edit.text(),self.customer_postcode_edit.text())
-        print(search_values)
+            self.model = self.connection.find_existing_customers_by_postcode(self.search_values)
+        self.select_customer_layout()
+        self.stacked_layout.setCurrentIndex(1)
 
 

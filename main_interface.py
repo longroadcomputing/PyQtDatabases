@@ -80,7 +80,7 @@ class ShopWindow(QMainWindow):
         self.add_customer_widget.clear_details()
 
     def add_order_view(self):
-        self.add_order_widget = FindCustomerWidget()
+        self.add_order_widget = FindCustomerWidget(self.connection)
         self.setCentralWidget(self.add_order_widget)
 
 if __name__ == "__main__":

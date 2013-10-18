@@ -39,3 +39,31 @@ class SQLConnection:
         query.addBindValue(details['post_code'])
         query.addBindValue(details['telephone'])
         query.exec_()
+
+    def find_existing_customers_by_number(self,values):
+        model = QSqlQueryModel()
+        query = QSqlQuery()
+        query.prepare("""SELECT * FROM customer WHERE CustomerID = ?""")
+        query.addBindValue(values[0])
+        query.exec_()
+        model.setQuery(query)
+        return model
+
+    def find_existing_customers_by_name(self,values):
+        model = QSqlQueryModel()
+        query = QSqlQuery()
+        query.prepare("""SELECT * FROM customer WHERE FirstName = ? and LastName = ?""")
+        query.addBindValue(values[0])
+        query.addBindValue(values[1])
+        query.exec_()
+        model.setQuery(query)
+        return model
+
+    def find_existing_customers_by_postcode(self,values):
+        model = QSqlQueryModel()
+        query = QSqlQuery()
+        query.prepare("""SELECT * FROM customer WHERE PostCode = ?""")
+        query.addBindValue(values[1])
+        query.exec_()
+        model.setQuery(query)
+        return model
