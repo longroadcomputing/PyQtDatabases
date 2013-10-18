@@ -105,8 +105,8 @@ class FindCustomerWidget(QWidget):
         self.select_customer_widget.setLayout(self.customer_table_layout)
         self.stacked_layout.addWidget(self.select_customer_widget)
 
-
-
+        #connections
+        self.customer_table.clicked.connect(self.selected_customer_details)
 
     def change_search(self):
         if self.radio_button_group.checkedId() == 0:
@@ -140,5 +140,11 @@ class FindCustomerWidget(QWidget):
             self.model = self.connection.find_existing_customers_by_postcode(self.search_values)
         self.select_customer_layout()
         self.stacked_layout.setCurrentIndex(1)
+
+    def selected_customer_details(self):
+        indexes = self.customer_table.selectedIndexes()
+        print(indexes)
+        for index in indexes:
+            print(self.customer_table.model().data(index))
 
 
