@@ -73,7 +73,8 @@ class ShopWindow(QMainWindow):
         self.setCentralWidget(self.add_customer_widget)
         #connect the custom signal in the widget to our method
         self.add_customer_widget.customerAddedSignal.connect(self.process_save_customer)
-
+        
+        
     def process_save_customer(self):
         details = self.add_customer_widget.customer_details()
         self.connection.add_new_customer(details)
