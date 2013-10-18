@@ -71,7 +71,7 @@ Finally, take a look at the code for this **README** file. [Markdown][4] is awes
 
 
 
-[1]: http://windows.gitbub.com/help
+[1]: http://windows.github.com/help
 [2]: http://pyqt.sourceforge.net/Docs/PyQt4/classes.html
 [3]: http://www.github.com
 [4]: http://daringfireball.net/projects/markdown/
