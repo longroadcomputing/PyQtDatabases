@@ -1,3 +1,5 @@
+import datetime
+
 from PyQt4.QtSql import *
 
 class SQLConnection:
@@ -67,3 +69,67 @@ class SQLConnection:
         query.exec_()
         model.setQuery(query)
         return model
+
+    def current_products(self):
+        model = QSqlRelationalTableModel()
+        print(self.db.tables())
+        model.setTable(self.db.tables()[2])
+        model.setRelation(3,QSqlRelation("ProductType","ProductTypeID","Description"))
+        model.select()
+        return model
+
+    def create_new_order_for_customer(self,customer_id):
+        query = QSqlQuery()
+        query.prepare("""INSERT INTO CustomerOrder(Date,Time,CustomerID) values (?,?,?)""")
+        today = datetime.datetime.today()
+        date = today.strftime("%Y-%m-%d")
+        time = today.strftime("%H:%M:%S")
+        query.addBindValue(date)
+        query.addBindValue(time)
+        query.addBindValue(customer_id)
+        query.exec_()
+        return date, time
+
+    def current_order_number(self,order_details):
+        query = QSqlQuery()
+        query.prepare("""SELECT * FROM CustomerOrder WHERE CustomerID = ? AND Date = ? AND Time = ?""")
+        query.addBindValue(order_details['customer'])
+        query.addBindValue(order_details['date'])
+        query.addBindValue(order_details['time'])
+        query.exec_()
+        query.first()
+        order = query.record()
+        order_id = order.value("OrderID")
+        return order_id
+
+    def add_product_to_order_with_details(self,order_details,product_id):
+        order_id = self.current_order_number(order_details)
+        query = QSqlQuery()
+        query.prepare("""INSERT INTO OrderItem(OrderID,ProductID,Quantity) values(?,?,1)""")
+        query.addBindValue(order_id)
+        query.addBindValue(product_id)
+        query.exec_()
+
+    def current_order_items(self,order_details):
+        order_id = self.current_order_number(order_details)
+        model = QSqlRelationalTableModel()
+        model.setEditStrategy(QSqlTableModel.OnFieldChange)
+        model.setTable("OrderItem")
+        model.setFilter("OrderID = {0}".format(order_id))
+        model.setRelation(2,QSqlRelation("Product","ProductID","Name"))
+        model.select()
+        return model
+
+    def current_order_total(self,order_details):
+        order_id = self.current_order_number(order_details)
+        query = QSqlQuery()
+        query.prepare("""SELECT SUM(Product.Price * OrderItem.Quantity) AS Total
+                         FROM Product, OrderItem
+                         WHERE OrderItem.OrderID = ?
+                         AND OrderItem.ProductID = Product.ProductID""")
+        query.addBindValue(order_id)
+        query.exec_()
+        query.first()
+        total = query.value(0)
+        return total
+

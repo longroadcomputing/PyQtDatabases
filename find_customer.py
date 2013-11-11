@@ -4,8 +4,8 @@ from PyQt4.QtCore import *
 class FindCustomerWidget(QWidget):
     """finds and displays all customers with given values"""
 
-     #customer signal to fire when details added
-    findCustomerSignal = pyqtSignal()
+    #fire when order created
+    createdNewOrder = pyqtSignal()
 
     def __init__(self,connection):
         super().__init__()
@@ -101,12 +101,16 @@ class FindCustomerWidget(QWidget):
         self.customer_table_layout = QVBoxLayout()
         self.customer_table_layout.addWidget(self.customer_table)
 
+        self.create_order_button = QPushButton("Create New Order")
+        self.customer_table_layout.addWidget(self.create_order_button)
+
         self.select_customer_widget = QWidget()
         self.select_customer_widget.setLayout(self.customer_table_layout)
         self.stacked_layout.addWidget(self.select_customer_widget)
 
         #connections
-        self.customer_table.clicked.connect(self.selected_customer_details)
+        self.create_order_button.clicked.connect(self.selected_customer_details)
+
 
     def change_search(self):
         if self.radio_button_group.checkedId() == 0:
@@ -143,8 +147,11 @@ class FindCustomerWidget(QWidget):
 
     def selected_customer_details(self):
         indexes = self.customer_table.selectedIndexes()
-        print(indexes)
-        for index in indexes:
-            print(self.customer_table.model().data(index))
+        self.customer_id = self.customer_table.model().data(indexes[0])
+        self.customer_table.setDisabled(True)
+        self.create_order_button.setDisabled(True)
+        self.date, self.time = self.connection.create_new_order_for_customer(self.customer_id)
+        self.createdNewOrder.emit()
 
-
+    def most_recent_created_order_details(self):
+        return {'customer':self.customer_id,'date':self.date,'time':self.time}
