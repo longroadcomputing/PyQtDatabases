@@ -1,7 +1,11 @@
 import sys
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+try:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import *
+except:
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
 
 from sql_connection import *
 from add_customer import *

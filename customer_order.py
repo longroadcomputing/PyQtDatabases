@@ -1,5 +1,9 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+try:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import *
+except:
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
 
 from find_customer import *
 from create_order import *

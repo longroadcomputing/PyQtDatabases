@@ -1,5 +1,9 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+try:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import *
+except:
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
 
 class OrderWidget(QWidget):
     """provides a widget that enables you to create an order full of products"""

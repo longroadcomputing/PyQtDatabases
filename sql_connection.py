@@ -1,6 +1,11 @@
 import datetime
 
-from PyQt4.QtSql import *
+try:
+    from PyQt4.QtSql import *
+    from PyQt4.QtCore import QT_VERSION_STR
+except:
+    from PyQt5.QtSql import *
+    from PyQt5.QtCore import QT_VERSION_STR
 
 class SQLConnection:
     def __init__(self,path):
@@ -12,7 +17,11 @@ class SQLConnection:
             self.close_database()
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
-        self.db.setDatabaseName(self.path)
+        if QT_VERSION_STR < '5':
+            path = self.path
+        else:
+            path = self.path[0]
+        self.db.setDatabaseName(path)
         ok = self.db.open()
         return ok
 
